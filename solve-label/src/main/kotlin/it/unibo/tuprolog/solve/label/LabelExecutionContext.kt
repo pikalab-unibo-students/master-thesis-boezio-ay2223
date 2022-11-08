@@ -11,7 +11,7 @@ data class LabelExecutionContext(
     override val outputChannels: OutputStore = OutputStore.fromStandard(),
     override val customData: CustomDataStore = CustomDataStore.empty(),
     // custom unifier must be provided as parameter
-    val custoUnifier: LabelAwareUnificator,
+    val customUnifier: LabelAwareUnificator,
     override val substitution: Substitution.Unifier,
     val query: Struct = Truth.TRUE,
     val goals: Cursor<out Term> = Cursor.empty(),
