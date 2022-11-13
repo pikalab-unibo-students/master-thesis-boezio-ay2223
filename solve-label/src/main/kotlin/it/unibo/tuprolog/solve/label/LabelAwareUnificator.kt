@@ -1,14 +1,14 @@
 package it.unibo.tuprolog.solve.label
 
 import it.unibo.tuprolog.core.Substitution
-import it.unibo.tuprolog.unify.Unificator
+import it.unibo.tuprolog.unify.AbstractUnificator
 
-interface LabelAwareUnificator: Unificator {
+abstract class LabelAwareUnificator: AbstractUnificator() {
 
-    fun shouldUnify(t1: Labelling, t2: Labelling): Boolean
-    fun merge(t1: Labelling, t2: Labelling): Labelling
+    abstract fun shouldUnify(t1: Labelling, t2: Labelling): Boolean
+    abstract fun merge(t1: Labelling, t2: Labelling): Labelling
 
-    fun mguWithLabels(t1: Labelling, t2: Labelling): Pair<Substitution, Labellings>
-    fun unifyWithLabels(t1: Labelling, t2: Labelling): Labelling
+    abstract fun mguWithLabels(t1: Labelling, t2: Labelling): Pair<Substitution, Labellings>
+    abstract fun unifyWithLabels(t1: Labelling, t2: Labelling): Labelling
 
 }
