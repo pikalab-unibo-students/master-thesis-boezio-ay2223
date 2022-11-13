@@ -9,6 +9,5 @@ abstract class LabelAwareUnificator: AbstractUnificator() {
     abstract fun merge(t1: Labelling, t2: Labelling): Labelling
 
     abstract fun mguWithLabels(t1: Labelling, t2: Labelling): Pair<Substitution, Labellings>
-    abstract fun unifyWithLabels(t1: Labelling, t2: Labelling): Labelling
 
 }
