@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 
 plugins {
     id("java")
@@ -16,6 +16,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":solve"))
+    implementation(project(":solve-classic"))
     implementation(project(":core"))
     implementation(project(":utils"))
 }
