@@ -48,6 +48,3 @@ gradleEnterprise {
         publishOnFailure()
     }
 }
-include("solve-label:commonMain")
-findProject(":solve-label:commonMain")?.name = "commonMain"
-include("solve-label")
