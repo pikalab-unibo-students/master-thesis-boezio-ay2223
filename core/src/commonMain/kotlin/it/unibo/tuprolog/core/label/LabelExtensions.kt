@@ -2,6 +2,7 @@ package it.unibo.tuprolog.solve
 
 import it.unibo.tuprolog.core.*
 import it.unibo.tuprolog.core.label.Label
+import it.unibo.tuprolog.core.label.LabelFormatter
 import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.utils.setTag
 
@@ -29,7 +30,7 @@ fun <T : Term> T.addLabel(label: Any): T = addLabel(Label.of(label))
 
 object LabelAwareTermFormatter : Formatter<Term> {
     override fun format(value: Term): String {
-        return value.labels.joinToString(", ", "$value<", ">")
+        return value.accept(LabelFormatter())
     }
 }
 

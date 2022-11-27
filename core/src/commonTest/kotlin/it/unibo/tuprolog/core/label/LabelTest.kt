@@ -23,4 +23,18 @@ class LabelTest {
         println(term.equalsWithLabels(term1))
 
     }
+
+    @Test
+    fun testChangeLabelsInplace(){
+
+        val term: Struct = Struct.of("f", Atom.of("a"))
+        print("Term without labels: ")
+        println(term.format(LabelAwareTermFormatter))
+
+        // add label
+        term.addLabel("x")
+        print("Term with labels: ")
+        println(term.format(LabelAwareTermFormatter))
+
+    }
 }
