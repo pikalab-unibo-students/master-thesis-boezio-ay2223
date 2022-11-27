@@ -71,4 +71,33 @@ class AbstractLabelledUnificatorTest {
         val unified2 = f2.applyWithLabel(mgu)
         println(unified2.format(LabelAwareTermFormatter))
     }
+
+    @Test
+    fun labelsExampleWithLabelledVarsAndStructs() {
+
+        val f1: Struct = Struct.of(
+            "f",
+            Atom.of("a"),
+            Struct.of("g", Atom.of("b").addLabel("x").addLabel("y")),
+        ).addLabel("x").addLabel("y")
+
+        val f2: Struct = Struct.of(
+            "f",
+            Var.of("A"),
+            Var.of("B").addLabel("x")
+        ).addLabel("x").addLabel("y").addLabel("z")
+
+        println("Formatted terms")
+        println(f1.format(LabelAwareTermFormatter))
+        println(f2.format(LabelAwareTermFormatter))
+
+        val mgu = myUnificator.mgu(f1, f2)
+        println(mgu.labels)
+
+        val unified = myUnificator.unify(f1, f2)
+        println(unified?.format(LabelAwareTermFormatter))
+
+        val unified2 = f2.applyWithLabel(mgu)
+        println(unified2.format(LabelAwareTermFormatter))
+    }
 }
