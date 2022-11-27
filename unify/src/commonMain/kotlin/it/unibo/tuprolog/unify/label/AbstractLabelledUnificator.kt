@@ -1,0 +1,46 @@
+package it.unibo.tuprolog.unify.label
+
+import it.unibo.tuprolog.core.Substitution
+import it.unibo.tuprolog.core.Term
+import it.unibo.tuprolog.core.label.Labels
+import it.unibo.tuprolog.solve.applyWithLabel
+import it.unibo.tuprolog.solve.labels
+import it.unibo.tuprolog.solve.setLabels
+import it.unibo.tuprolog.unify.Unificator
+
+abstract class AbstractLabelledUnificator(private val delegate: Unificator = Unificator.default) : LabelledAwareUnificator {
+
+    abstract override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean
+
+    abstract override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels
+
+    override fun merge(
+        substitution1: Substitution,
+        substitution2: Substitution,
+        occurCheckEnabled: Boolean
+    ): Substitution {
+        TODO("Not yet implemented")
+    }
+
+    override val context: Substitution
+        get() = delegate.context
+
+    override fun mgu(term1: Term, term2: Term, occurCheckEnabled: Boolean): Substitution {
+        if (shouldUnify(term1, term1.labels, term2, term2.labels)) {
+            val mgu = delegate.mgu(term1, term2, occurCheckEnabled)
+            if (mgu.isSuccess) {
+                val finalLabels = merge(term1, term1.labels, term2, term2.labels)
+                return mgu.setLabels(finalLabels)
+            }
+        }
+        return Substitution.failed()
+    }
+
+    override fun unify(term1: Term, term2: Term, occurCheckEnabled: Boolean): Term? {
+        val mguWithLabels = mgu(term1, term2)
+        if (mguWithLabels.isSuccess) {
+            return term1.applyWithLabel(mguWithLabels)
+        }
+        return null
+    }
+}
