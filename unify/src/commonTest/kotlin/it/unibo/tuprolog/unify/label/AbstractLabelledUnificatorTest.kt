@@ -6,12 +6,28 @@ import it.unibo.tuprolog.solve.LabelAwareTermFormatter
 import it.unibo.tuprolog.solve.addLabel
 import it.unibo.tuprolog.solve.applyWithLabel
 import it.unibo.tuprolog.solve.labels
+import it.unibo.tuprolog.unify.AbstractUnificator
 import kotlin.test.Test
 
 class AbstractLabelledUnificatorTest {
 
     // custom Unificator
-    private val myUnificator = object : AbstractLabelledUnificator() {
+    val customAbstractUnificator = object : AbstractUnificator(){
+
+        override fun checkTermsEquality(first: Term, second: Term): Boolean {
+            TODO("Not yet implemented")
+        }
+
+        override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean {
+            return labels1.any { it in labels2 } || (labels1.isEmpty() && labels2.isEmpty())
+        }
+
+        override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels {
+            return (labels1.filter { it in labels2 }.toSet() + labels2.filter { it in labels1 }.toSet())
+        }
+
+    }
+    private val myUnificator = object : AbstractLabelledUnificator(customAbstractUnificator) {
         override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean {
             return labels1.any { it in labels2 } || (labels1.isEmpty() && labels2.isEmpty())
         }
@@ -50,7 +66,7 @@ class AbstractLabelledUnificatorTest {
         val f1: Struct = Struct.of(
             "f",
             Atom.of("a"),
-            Struct.of("g", Atom.of("b").addLabel("x").addLabel("y")),
+            Struct.of("g", Atom.of("b")).addLabel("x").addLabel("y"),
         )
         val f2: Struct = Struct.of(
             "f",
@@ -65,7 +81,7 @@ class AbstractLabelledUnificatorTest {
         val mgu = myUnificator.mgu(f1, f2)
         println(mgu.labels)
 
-        val unified = myUnificator.unify(f1, f2)
+        val unified = myUnificator.unify(f2, f1)
         println(unified?.format(LabelAwareTermFormatter))
 
         val unified2 = f2.applyWithLabel(mgu)
