@@ -13,7 +13,7 @@ class AbstractLabelledUnificatorTest {
     // custom Unificator
     private val myUnificator = object : AbstractLabelledUnificator() {
         override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean {
-            return labels1.any { it in labels2 }
+            return labels1.any { it in labels2 } || (labels1.isEmpty() && labels2.isEmpty())
         }
 
         override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels {
@@ -99,5 +99,15 @@ class AbstractLabelledUnificatorTest {
 
         val unified2 = f2.applyWithLabel(mgu)
         println(unified2.format(LabelAwareTermFormatter))
+    }
+
+    @Test
+    fun testVariableMgu(){
+
+        val variable = Var.of("X")
+        val integer = Integer.of(2)
+
+        val mgu = myUnificator.mgu(variable, integer)
+        print(mgu)
     }
 }
