@@ -6,8 +6,6 @@ import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.TermVisitor
 import it.unibo.tuprolog.core.Terms.VAR_NAME_PATTERN
 import it.unibo.tuprolog.core.Var
-import it.unibo.tuprolog.core.label.Labels
-import it.unibo.tuprolog.solve.setLabels
 import it.unibo.tuprolog.utils.setTags
 import kotlin.jvm.Synchronized
 
@@ -75,9 +73,7 @@ internal class VarImpl(
 
     override fun isUnifierSkippable(unifier: Substitution.Unifier): Boolean = this !in unifier
 
-    @Suppress("UNCHECKED_CAST")
-    override fun applyNonEmptyUnifier(unifier: Substitution.Unifier): Term =
-        unifier[this]?.setLabels(unifier.tags[this.completeName] as Labels) ?: this
+    override fun applyNonEmptyUnifier(unifier: Substitution.Unifier): Term = unifier[this] ?: this
 
     override fun <T> accept(visitor: TermVisitor<T>): T = visitor.visitVar(this)
 }
