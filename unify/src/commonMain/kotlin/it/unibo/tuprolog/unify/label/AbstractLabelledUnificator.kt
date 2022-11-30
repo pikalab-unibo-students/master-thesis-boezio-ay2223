@@ -3,21 +3,20 @@ package it.unibo.tuprolog.unify.label
 import it.unibo.tuprolog.core.Substitution
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.label.Labels
-import it.unibo.tuprolog.solve.applyWithLabel
 import it.unibo.tuprolog.solve.labels
-import it.unibo.tuprolog.solve.setLabels
 import it.unibo.tuprolog.unify.AbstractUnificator
 import it.unibo.tuprolog.unify.Unificator
+import it.unibo.tuprolog.utils.setTag
 
 abstract class AbstractLabelledUnificator(
     private val delegate: AbstractUnificator = Unificator.default as AbstractUnificator
 ) : LabelledAwareUnificator {
 
     override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean =
-        delegate.shouldUnify(term1, labels1, term2, labels2);
+        delegate.shouldUnify(term1, labels1, term2, labels2)
 
     override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels =
-        delegate.merge(term1, labels1, term2, labels2);
+        delegate.merge(term1, labels1, term2, labels2)
 
     override fun merge(
         substitution1: Substitution,
@@ -35,7 +34,8 @@ abstract class AbstractLabelledUnificator(
             val mgu = delegate.mgu(term1, term2, occurCheckEnabled)
             if (mgu.isSuccess) {
                 val finalLabels = merge(term1, term1.labels, term2, term2.labels)
-                return mgu.setLabels(finalLabels)
+                val newMgu = mgu.setTag(term1.toString(), finalLabels)
+                return newMgu.setTag(term2.toString(), finalLabels)
             }
         }
         return Substitution.failed()
