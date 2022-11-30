@@ -37,8 +37,6 @@ object LabelAwareTermFormatter : Formatter<Term> {
 fun Term.equalsWithLabels(other: Any?) =
     this == other && this.labels == (other as Term).labels
 
-fun Term.applyWithLabel(substitution: Substitution): Term =
-    this.apply(substitution).setLabels(substitution.labels)
 
 
 
