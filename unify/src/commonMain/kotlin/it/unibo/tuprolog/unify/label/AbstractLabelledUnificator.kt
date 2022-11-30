@@ -44,7 +44,7 @@ abstract class AbstractLabelledUnificator(
     override fun unify(term1: Term, term2: Term, occurCheckEnabled: Boolean): Term? {
         val mguWithLabels = mgu(term1, term2)
         if (mguWithLabels.isSuccess) {
-            return term1.applyWithLabel(mguWithLabels)
+            return term1.accept(LabelledVisitor(mguWithLabels))
         }
         return null
     }
