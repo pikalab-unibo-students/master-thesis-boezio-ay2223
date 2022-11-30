@@ -61,9 +61,9 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
         return changed
     }
 
-    protected open fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean = true
+    public open fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean = true
 
-    protected open fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels = emptySet()
+    public open fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels = emptySet()
 
     private fun mgu(equations: MutableList<Equation>, occurCheckEnabled: Boolean): Substitution {
 

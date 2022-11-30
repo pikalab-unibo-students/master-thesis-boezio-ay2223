@@ -27,15 +27,7 @@ class AbstractLabelledUnificatorTest {
         }
 
     }
-    private val myUnificator = object : AbstractLabelledUnificator(customAbstractUnificator) {
-        override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean {
-            return labels1.any { it in labels2 } || (labels1.isEmpty() && labels2.isEmpty())
-        }
-
-        override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels {
-            return (labels1.filter { it in labels2 }.toSet() + labels2.filter { it in labels1 }.toSet())
-        }
-    }
+    private val myUnificator = object : AbstractLabelledUnificator(customAbstractUnificator){}
 
     @Test
     fun labelsExampleWithUnification() {

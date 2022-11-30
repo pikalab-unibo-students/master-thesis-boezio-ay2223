@@ -6,13 +6,18 @@ import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.solve.applyWithLabel
 import it.unibo.tuprolog.solve.labels
 import it.unibo.tuprolog.solve.setLabels
+import it.unibo.tuprolog.unify.AbstractUnificator
 import it.unibo.tuprolog.unify.Unificator
 
-abstract class AbstractLabelledUnificator(private val delegate: Unificator = Unificator.default) : LabelledAwareUnificator {
+abstract class AbstractLabelledUnificator(
+    private val delegate: AbstractUnificator = Unificator.default as AbstractUnificator
+) : LabelledAwareUnificator {
 
-    abstract override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean
+    override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean =
+        delegate.shouldUnify(term1, labels1, term2, labels2);
 
-    abstract override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels
+    override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels =
+        delegate.merge(term1, labels1, term2, labels2);
 
     override fun merge(
         substitution1: Substitution,
