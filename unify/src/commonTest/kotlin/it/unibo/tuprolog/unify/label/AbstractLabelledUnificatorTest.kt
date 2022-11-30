@@ -2,12 +2,10 @@ package it.unibo.tuprolog.unify.label
 
 import it.unibo.tuprolog.core.*
 import it.unibo.tuprolog.core.label.Labels
-import it.unibo.tuprolog.solve.LabelAwareTermFormatter
 import it.unibo.tuprolog.solve.addLabel
-import it.unibo.tuprolog.solve.applyWithLabel
-import it.unibo.tuprolog.solve.labels
 import it.unibo.tuprolog.unify.AbstractUnificator
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class AbstractLabelledUnificatorTest {
 
@@ -30,92 +28,89 @@ class AbstractLabelledUnificatorTest {
     private val myUnificator = object : AbstractLabelledUnificator(customAbstractUnificator){}
 
     @Test
-    fun labelsExampleWithUnification() {
+    fun testExampleWithoutLabels(){
 
-
-        val f1: Struct = Struct.of("f", Integer.of(1)).addLabel("x").addLabel("y")
-        val f2: Struct = Struct.of("f", Var.of("A")).addLabel("z").addLabel("x")
-
-        print("First Term: ")
-        println(f1.format(LabelAwareTermFormatter))
-
-        print("Second Term: ")
-        println(f2.format(LabelAwareTermFormatter))
-
-        val mgu = myUnificator.mgu(f1, f2)
-        println(mgu.labels)
+        val f1 = Struct.of("f", Atom.of("a"), Var.of("B"))
+        val f2 = Struct.of("f", Var.of("A"), Atom.of("b"))
 
         val unified = myUnificator.unify(f1, f2)
-        println(unified?.format(LabelAwareTermFormatter))
+        val expected = Struct.of("f", Atom.of("a"), Atom.of("b"))
 
-        val unified2 = f2.applyWithLabel(mgu)
-        println(unified2.format(LabelAwareTermFormatter))
+        assertEquals(expected, unified)
+
     }
 
     @Test
-    fun labelsExampleWithLabelledVars() {
+    fun testExampleWithLabelledArguments(){
 
-        val f1: Struct = Struct.of(
+        val f1 = Struct.of(
             "f",
-            Atom.of("a"),
-            Struct.of("g", Atom.of("b")).addLabel("x").addLabel("y"),
+            Atom.of("a").addLabel("x").addLabel("y"),
+            Var.of("B")
         )
-        val f2: Struct = Struct.of(
+        val f2 = Struct.of(
             "f",
-            Var.of("A"),
-            Var.of("B").addLabel("x")
+            Var.of("A").addLabel("x").addLabel("z"),
+            Atom.of("b")
         )
 
-        println("Formatted terms")
-        println(f1.format(LabelAwareTermFormatter))
-        println(f2.format(LabelAwareTermFormatter))
+        val unified = myUnificator.unify(f1, f2)
+        val expected = Struct.of(
+            "f",
+            Atom.of("a").addLabel("x"),
+            Atom.of("b")
+        )
 
-        val mgu = myUnificator.mgu(f1, f2)
-        println(mgu.labels)
+        assertEquals(expected, unified)
 
-        val unified = myUnificator.unify(f2, f1)
-        println(unified?.format(LabelAwareTermFormatter))
-
-        val unified2 = f2.applyWithLabel(mgu)
-        println(unified2.format(LabelAwareTermFormatter))
     }
 
     @Test
-    fun labelsExampleWithLabelledVarsAndStructs() {
+    fun testExampleWithLabelledArgsAndStruct(){
 
-        val f1: Struct = Struct.of(
+        val f1 = Struct.of(
             "f",
-            Atom.of("a"),
-            Struct.of("g", Atom.of("b").addLabel("x").addLabel("y")),
+            Atom.of("a").addLabel("x").addLabel("y"),
+            Var.of("B")
+        ).addLabel("w").addLabel("v")
+        val f2 = Struct.of(
+            "f",
+            Var.of("A").addLabel("x").addLabel("z"),
+            Atom.of("b")
+        ).addLabel("w")
+
+        val unified = myUnificator.unify(f1, f2)
+        val expected = Struct.of(
+            "f",
+            Atom.of("a").addLabel("x"),
+            Atom.of("b")
+        ).addLabel("w")
+
+        assertEquals(expected, unified)
+    }
+
+    @Test
+    fun testExampleWithComplexStruct(){
+
+        val f1 = Struct.of(
+            "f",
+            Integer.of(1),
+            Var.of("B").addLabel("x").addLabel("y"),
         ).addLabel("x").addLabel("y")
-
-        val f2: Struct = Struct.of(
+        val f2 = Struct.of(
             "f",
             Var.of("A"),
-            Var.of("B").addLabel("x")
-        ).addLabel("x").addLabel("y").addLabel("z")
-
-        println("Formatted terms")
-        println(f1.format(LabelAwareTermFormatter))
-        println(f2.format(LabelAwareTermFormatter))
-
-        val mgu = myUnificator.mgu(f1, f2)
-        println(mgu.labels)
+            Struct.of("g", Atom.of("b")).addLabel("x"),
+        ).addLabel("y")
 
         val unified = myUnificator.unify(f1, f2)
-        println(unified?.format(LabelAwareTermFormatter))
+        val expected = Struct.of(
+            "f",
+            Integer.of("1"),
+            Struct.of("g", Atom.of("b")).addLabel("x")
+        ).addLabel("y")
 
-        val unified2 = f2.applyWithLabel(mgu)
-        println(unified2.format(LabelAwareTermFormatter))
-    }
+        assertEquals(expected, unified)
 
-    @Test
-    fun testVariableMgu(){
-
-        val variable = Var.of("X")
-        val integer = Integer.of(2)
-
-        val mgu = myUnificator.mgu(variable, integer)
-        print(mgu)
     }
 }
