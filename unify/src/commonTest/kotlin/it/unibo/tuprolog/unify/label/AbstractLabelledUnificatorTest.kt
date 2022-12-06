@@ -30,10 +30,14 @@ class AbstractLabelledUnificatorTest {
     @Test
     fun testExampleWithoutLabels(){
 
+        // f(a<>,B<>)<>
+        // f(A<>,b<>)<>
+
         val f1 = Struct.of("f", Atom.of("a"), Var.of("B"))
         val f2 = Struct.of("f", Var.of("A"), Atom.of("b"))
 
         val unified = myUnificator.unify(f1, f2)
+        // f(a<>,b<>)<>
         val expected = Struct.of("f", Atom.of("a"), Atom.of("b"))
 
         assertEquals(expected, unified)
@@ -42,6 +46,9 @@ class AbstractLabelledUnificatorTest {
 
     @Test
     fun testExampleWithLabelledArguments(){
+
+        // f(a<@x,@y>,B<>)<>
+        // f(A<@x,@z>,b<>)<>
 
         val f1 = Struct.of(
             "f",
@@ -55,6 +62,7 @@ class AbstractLabelledUnificatorTest {
         )
 
         val unified = myUnificator.unify(f1, f2)
+        // f(a<@x>,b<>)<>
         val expected = Struct.of(
             "f",
             Atom.of("a").addLabel("x"),
@@ -68,6 +76,9 @@ class AbstractLabelledUnificatorTest {
     @Test
     fun testExampleWithLabelledArgsAndStruct(){
 
+        // f(a<@x,@y>,B<>)<@w,@v>
+        // f(A<@x,@z>,b<>)<@w>
+
         val f1 = Struct.of(
             "f",
             Atom.of("a").addLabel("x").addLabel("y"),
@@ -80,6 +91,7 @@ class AbstractLabelledUnificatorTest {
         ).addLabel("w")
 
         val unified = myUnificator.unify(f1, f2)
+        // f(a<@x>,b<>)<@w>
         val expected = Struct.of(
             "f",
             Atom.of("a").addLabel("x"),
@@ -91,6 +103,9 @@ class AbstractLabelledUnificatorTest {
 
     @Test
     fun testExampleWithComplexStruct(){
+
+        // f(1<>,B<@x,@y>)<@x,@y>
+        // f(A<>,g(b<>)<@x>)<@x,@y>
 
         val f1 = Struct.of(
             "f",
@@ -104,6 +119,7 @@ class AbstractLabelledUnificatorTest {
         ).addLabel("y")
 
         val unified = myUnificator.unify(f1, f2)
+        // f(1<>,g(b<>)<@x>)<@y>
         val expected = Struct.of(
             "f",
             Integer.of("1"),
