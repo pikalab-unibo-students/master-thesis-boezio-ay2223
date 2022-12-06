@@ -1,8 +1,8 @@
 package it.unibo.tuprolog.core.label
 
 import it.unibo.tuprolog.core.Atom
-import it.unibo.tuprolog.core.format
 import it.unibo.tuprolog.core.Struct
+import it.unibo.tuprolog.core.format
 import kotlin.test.Test
 
 class LabelTest {
