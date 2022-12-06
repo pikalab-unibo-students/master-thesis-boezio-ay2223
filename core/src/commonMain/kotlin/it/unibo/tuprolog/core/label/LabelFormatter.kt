@@ -23,6 +23,6 @@ class LabelFormatter() : DefaultTermVisitor<String>() {
         }
     }
 
-    private fun <T : Term> getFormattedOutput(term:T): String =
+    private fun <T : Term> getFormattedOutput(term: T): String =
         term.labels.joinToString(",", "$term<", ">")
 }
