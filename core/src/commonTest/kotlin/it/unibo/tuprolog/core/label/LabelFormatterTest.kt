@@ -1,6 +1,5 @@
 package it.unibo.tuprolog.core.label
 
-
 import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.format
