@@ -97,7 +97,7 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
                                     eqIterator.previousIndex()
                                 )
                             }
-                        }else {
+                        } else {
                             return failed()
                         }
                     }
