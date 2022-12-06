@@ -2,7 +2,7 @@ package it.unibo.tuprolog.unify.label
 
 import it.unibo.tuprolog.core.*
 import it.unibo.tuprolog.core.label.Labels
-import it.unibo.tuprolog.solve.addLabel
+import it.unibo.tuprolog.core.label.addLabel
 import it.unibo.tuprolog.unify.AbstractUnificator
 import kotlin.test.Test
 import kotlin.test.assertEquals

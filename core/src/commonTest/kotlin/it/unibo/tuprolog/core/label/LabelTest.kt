@@ -1,7 +1,6 @@
 package it.unibo.tuprolog.core.label
 
 import it.unibo.tuprolog.core.*
-import it.unibo.tuprolog.solve.*
 import kotlin.test.Test
 
 class LabelTest {

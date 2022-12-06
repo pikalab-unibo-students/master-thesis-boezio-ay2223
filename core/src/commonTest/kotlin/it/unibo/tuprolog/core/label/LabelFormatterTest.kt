@@ -3,10 +3,6 @@ package it.unibo.tuprolog.core.label
 import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.format
-import it.unibo.tuprolog.solve.LabelAwareTermFormatter
-import it.unibo.tuprolog.solve.addLabel
-import it.unibo.tuprolog.solve.equalsWithLabels
-import it.unibo.tuprolog.solve.labels
 import kotlin.test.Test
 
 class LabelFormatterTest {
