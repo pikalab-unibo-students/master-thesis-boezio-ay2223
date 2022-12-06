@@ -12,7 +12,6 @@ import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
 
-
 class LabelledVisitor(substitution: Substitution) : DefaultTermVisitor<Term>() {
 
     private val unifier: Substitution.Unifier = substitution.castToUnifier()
@@ -29,18 +28,18 @@ class LabelledVisitor(substitution: Substitution) : DefaultTermVisitor<Term>() {
         return unifier[term]?.setLabels(labels) ?: term.setLabels(labels)
     }
 
-    override fun visitInteger(term: Integer) : Term = visitNumber(term)
+    override fun visitInteger(term: Integer): Term = visitNumber(term)
 
-    override fun visitReal(term: Real) : Term = visitNumber(term)
+    override fun visitReal(term: Real): Term = visitNumber(term)
 
     @Suppress("UNCHECKED_CAST")
-    override fun visitAtom(term: Atom) : Term {
+    override fun visitAtom(term: Atom): Term {
         val labels: Labels = unifier.tags[term.toString()] as Labels
         return term.setLabels(labels)
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun visitStruct(term: Struct) : Term {
+    override fun visitStruct(term: Struct): Term {
         val newArgs = term.args.map { it.accept(this) }
         return Struct.of(
             term.functor,

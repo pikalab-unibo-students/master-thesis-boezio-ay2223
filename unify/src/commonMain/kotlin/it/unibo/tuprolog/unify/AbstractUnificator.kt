@@ -66,10 +66,8 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
     public open fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels = emptySet()
 
     private fun mgu(equations: MutableList<Equation>, occurCheckEnabled: Boolean): Substitution {
-
         val labelsMap: MutableMap<String, Labels> = mutableMapOf()
         var changed = true
-
         while (changed) {
             changed = false
             val eqIterator = equations.listIterator()
@@ -85,7 +83,7 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
                         changed = true
                     }
                     eq.isAssignment -> {
-                        if (shouldUnify(eq.lhs, eq.lhs.labels, eq.rhs, eq.rhs.labels)){
+                        if (shouldUnify(eq.lhs, eq.lhs.labels, eq.rhs, eq.rhs.labels)) {
                             val newLabels = merge(eq.lhs, eq.lhs.labels, eq.rhs, eq.rhs.labels)
                             labelsMap[eq.lhs.toString()] = newLabels
                             labelsMap[eq.rhs.toString()] = newLabels
@@ -99,8 +97,9 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
                                     eqIterator.previousIndex()
                                 )
                             }
-                        }else
+                        }else {
                             return failed()
+                        }
                     }
                     eq.isComparison -> {
                         eqIterator.remove()
@@ -118,7 +117,7 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
         }
 
         var substitution = equations.filter { it.isAssignment }.toSubstitution()
-        for((key, value) in labelsMap){
+        for ((key, value) in labelsMap) {
             substitution = substitution.setTag(key, value)
         }
         return substitution
