@@ -3,7 +3,7 @@ package it.unibo.tuprolog.unify.label
 import it.unibo.tuprolog.core.*
 import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
-import it.unibo.tuprolog.solve.setLabels
+import it.unibo.tuprolog.core.label.setLabels
 
 class LabelledVisitor(substitution: Substitution) : DefaultTermVisitor<Term>() {
 

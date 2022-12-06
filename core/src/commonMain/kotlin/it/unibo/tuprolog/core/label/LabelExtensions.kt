@@ -1,9 +1,6 @@
-package it.unibo.tuprolog.solve
+package it.unibo.tuprolog.core.label
 
 import it.unibo.tuprolog.core.*
-import it.unibo.tuprolog.core.label.Label
-import it.unibo.tuprolog.core.label.LabelFormatter
-import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.utils.setTag
 
 @Suppress("UNCHECKED_CAST")
@@ -36,7 +33,3 @@ object LabelAwareTermFormatter : Formatter<Term> {
 
 fun Term.equalsWithLabels(other: Any?) =
     this == other && this.labels == (other as Term).labels
-
-
-
-

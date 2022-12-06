@@ -3,7 +3,7 @@ package it.unibo.tuprolog.unify.label
 import it.unibo.tuprolog.core.Substitution
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.label.Labels
-import it.unibo.tuprolog.solve.labels
+import it.unibo.tuprolog.core.label.labels
 import it.unibo.tuprolog.unify.AbstractUnificator
 import it.unibo.tuprolog.unify.Unificator
 import it.unibo.tuprolog.utils.setTag

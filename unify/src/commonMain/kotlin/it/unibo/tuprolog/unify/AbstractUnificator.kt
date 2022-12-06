@@ -6,7 +6,7 @@ import it.unibo.tuprolog.core.Substitution.Companion.failed
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.Labels
-import it.unibo.tuprolog.solve.labels
+import it.unibo.tuprolog.core.label.labels
 import it.unibo.tuprolog.utils.setTag
 import kotlin.jvm.JvmOverloads
 
