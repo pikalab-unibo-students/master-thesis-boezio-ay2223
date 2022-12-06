@@ -22,7 +22,6 @@ class LabelFormatterTest {
 
         println(term == term1)
         println(term.equalsWithLabels(term1))
-
     }
 
     @Test
@@ -35,6 +34,5 @@ class LabelFormatterTest {
         println(term)
         println(term.labels)
         println(term.format(LabelAwareTermFormatter))
-
     }
 }
