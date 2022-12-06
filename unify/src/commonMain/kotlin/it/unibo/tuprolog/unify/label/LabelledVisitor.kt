@@ -1,9 +1,17 @@
 package it.unibo.tuprolog.unify.label
 
-import it.unibo.tuprolog.core.*
+import it.unibo.tuprolog.core.Atom
+import it.unibo.tuprolog.core.Integer
 import it.unibo.tuprolog.core.label.Labels
-import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
 import it.unibo.tuprolog.core.label.setLabels
+import it.unibo.tuprolog.core.Numeric
+import it.unibo.tuprolog.core.Real
+import it.unibo.tuprolog.core.Struct
+import it.unibo.tuprolog.core.Substitution
+import it.unibo.tuprolog.core.Term
+import it.unibo.tuprolog.core.Var
+import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
+
 
 class LabelledVisitor(substitution: Substitution) : DefaultTermVisitor<Term>() {
 
