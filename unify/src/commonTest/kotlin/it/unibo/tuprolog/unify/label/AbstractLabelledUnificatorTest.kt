@@ -1,6 +1,10 @@
 package it.unibo.tuprolog.unify.label
 
-import it.unibo.tuprolog.core.*
+import it.unibo.tuprolog.core.Atom
+import it.unibo.tuprolog.core.Integer
+import it.unibo.tuprolog.core.Struct
+import it.unibo.tuprolog.core.Term
+import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.core.label.addLabel
 import it.unibo.tuprolog.unify.AbstractUnificator
@@ -10,7 +14,7 @@ import kotlin.test.assertEquals
 class AbstractLabelledUnificatorTest {
 
     // custom Unificator
-    val customAbstractUnificator = object : AbstractUnificator(){
+    val customAbstractUnificator = object : AbstractUnificator() {
 
         override fun checkTermsEquality(first: Term, second: Term): Boolean {
             TODO("Not yet implemented")
@@ -23,13 +27,11 @@ class AbstractLabelledUnificatorTest {
         override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels {
             return (labels1.filter { it in labels2 }.toSet() + labels2.filter { it in labels1 }.toSet())
         }
-
     }
-    private val myUnificator = object : AbstractLabelledUnificator(customAbstractUnificator){}
+    private val myUnificator = object : AbstractLabelledUnificator(customAbstractUnificator) {}
 
     @Test
-    fun testExampleWithoutLabels(){
-
+    fun testExampleWithoutLabels() {
         // f(a<>,B<>)<>
         // f(A<>,b<>)<>
 
@@ -41,12 +43,10 @@ class AbstractLabelledUnificatorTest {
         val expected = Struct.of("f", Atom.of("a"), Atom.of("b"))
 
         assertEquals(expected, unified)
-
     }
 
     @Test
-    fun testExampleWithLabelledArguments(){
-
+    fun testExampleWithLabelledArguments() {
         // f(a<@x,@y>,B<>)<>
         // f(A<@x,@z>,b<>)<>
 
@@ -70,12 +70,10 @@ class AbstractLabelledUnificatorTest {
         )
 
         assertEquals(expected, unified)
-
     }
 
     @Test
-    fun testExampleWithLabelledArgsAndStruct(){
-
+    fun testExampleWithLabelledArgsAndStruct() {
         // f(a<@x,@y>,B<>)<@w,@v>
         // f(A<@x,@z>,b<>)<@w>
 
@@ -102,8 +100,7 @@ class AbstractLabelledUnificatorTest {
     }
 
     @Test
-    fun testExampleWithComplexStruct(){
-
+    fun testExampleWithComplexStruct() {
         // f(1<>,B<@x,@y>)<@x,@y>
         // f(A<>,g(b<>)<@x>)<@x,@y>
 
@@ -127,6 +124,5 @@ class AbstractLabelledUnificatorTest {
         ).addLabel("y")
 
         assertEquals(expected, unified)
-
     }
 }
