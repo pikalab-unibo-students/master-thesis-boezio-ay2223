@@ -1,6 +1,8 @@
 package it.unibo.tuprolog.core.label
 
-import it.unibo.tuprolog.core.*
+import it.unibo.tuprolog.core.Substitution
+import it.unibo.tuprolog.core.Term
+import it.unibo.tuprolog.core.Formatter
 import it.unibo.tuprolog.utils.setTag
 
 @Suppress("UNCHECKED_CAST")

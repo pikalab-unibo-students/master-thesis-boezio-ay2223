@@ -1,6 +1,8 @@
 package it.unibo.tuprolog.core.label
 
-import it.unibo.tuprolog.core.*
+import it.unibo.tuprolog.core.Atom
+import it.unibo.tuprolog.core.Struct
+import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
 
 class LabelFormatter() : DefaultTermVisitor<String>() {
