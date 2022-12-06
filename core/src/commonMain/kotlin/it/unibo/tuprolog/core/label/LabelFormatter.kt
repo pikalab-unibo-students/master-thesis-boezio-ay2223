@@ -9,7 +9,7 @@ class LabelFormatter() : DefaultTermVisitor<String>() {
 
     override fun visitStruct(term: Struct): String {
         return if (term !is Atom) {
-            val prefix =  "${term.functor}("
+            val prefix = "${term.functor}("
             var arguments = ""
             for (arg in term.args) {
                 arguments = arguments + arg.accept(this) + ", "

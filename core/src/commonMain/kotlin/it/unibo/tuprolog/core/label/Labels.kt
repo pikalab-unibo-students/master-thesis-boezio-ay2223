@@ -1,3 +1,3 @@
 package it.unibo.tuprolog.core.label
 
-typealias Labels =  Set<Label>
+typealias Labels = Set<Label>
