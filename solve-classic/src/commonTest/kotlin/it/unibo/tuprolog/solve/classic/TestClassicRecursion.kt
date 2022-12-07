@@ -2,6 +2,7 @@ package it.unibo.tuprolog.solve.classic
 
 import it.unibo.tuprolog.solve.SolverFactory
 import it.unibo.tuprolog.solve.TestRecursion
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 class TestClassicRecursion : TestRecursion, SolverFactory by ClassicSolverFactory {
@@ -22,7 +23,7 @@ class TestClassicRecursion : TestRecursion, SolverFactory by ClassicSolverFactor
         prototype.testTailRecursion()
     }
 
-    @Test
+    @Test @Ignore
     override fun testNonTailRecursion() {
         prototype.testNonTailRecursion()
     }
