@@ -23,6 +23,9 @@ data class StatePrimitiveExecution(override val context: ClassicExecutionContext
         )
     }
 
+    val failureState: StateBacktracking
+        get() = StateBacktracking(context.parent!!.copyFromCurrentPrimitive())
+
     override fun computeNext(): State = try {
         context.primitives.current?.solution?.whenIs(
             yes = {
@@ -39,7 +42,7 @@ data class StatePrimitiveExecution(override val context: ClassicExecutionContext
                 )
             },
             no = {
-                StateBacktracking(context.parent!!.copyFromCurrentPrimitive())
+                failureState
             },
             halt = {
                 StateException(it.exception.updateLastContext(context.skipThrow()), context.copyFromCurrentPrimitive())

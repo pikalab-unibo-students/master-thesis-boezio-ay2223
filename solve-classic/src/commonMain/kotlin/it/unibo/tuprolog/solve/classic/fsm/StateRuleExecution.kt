@@ -5,7 +5,7 @@ import it.unibo.tuprolog.solve.classic.ClassicExecutionContext
 import it.unibo.tuprolog.utils.Cursor
 
 data class StateRuleExecution(override val context: ClassicExecutionContext) : AbstractState(context) {
-    private val failureState: StateBacktracking
+    val failureState: StateBacktracking
         get() = StateBacktracking(context.copy(rules = Cursor.empty(), step = nextStep()))
 
     override fun computeNext(): State {
