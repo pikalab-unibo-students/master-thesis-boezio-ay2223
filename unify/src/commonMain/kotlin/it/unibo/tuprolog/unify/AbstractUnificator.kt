@@ -58,6 +58,10 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
         return changed
     }
 
+    protected open fun shortCircuit(assignment: Equation.Assignment): Boolean = false
+
+    protected open fun hijacktMgu(substitution: Substitution): Substitution = substitution
+
     private fun mgu(equations: MutableList<Equation>, occurCheckEnabled: Boolean): Substitution {
         var changed = true
 
@@ -77,7 +81,7 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
                     }
                     eq.isAssignment -> {
                         val assignment = eq.castToAssignment()
-                        if (occurCheckEnabled && occurrenceCheck(assignment.lhs, eq.rhs)) {
+                        if (shortCircuit(assignment) || occurCheckEnabled && occurrenceCheck(assignment.lhs, eq.rhs)) {
                             return failed()
                         } else {
                             changed = changed || applySubstitutionToEquations(
@@ -102,7 +106,7 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
             }
         }
 
-        return equations.filter { it.isAssignment }.toSubstitution()
+        return equations.filter { it.isAssignment }.toSubstitution().also { hijacktMgu(it) }
     }
 
     override fun mgu(term1: Term, term2: Term, occurCheckEnabled: Boolean): Substitution {
