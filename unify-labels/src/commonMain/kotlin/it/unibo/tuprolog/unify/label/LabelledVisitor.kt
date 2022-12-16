@@ -15,15 +15,13 @@ import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
 
 class LabelledVisitor(private val unifier: Substitution.Unifier) : DefaultTermVisitor<Term>() {
 
-    @Suppress("UNCHECKED_CAST")
     override fun defaultValue(term: Term): Term {
         val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
         return unifier[term]?.setLabels(labels) ?: term.setLabels(labels)
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun visitVar(term: Var): Term {
-        val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
+        val labels: Labels = unifier.labellings[term] ?: emptySet()
         return unifier[term]?.setLabels(labels) ?: term.setLabels(labels)
     }
 
@@ -31,24 +29,21 @@ class LabelledVisitor(private val unifier: Substitution.Unifier) : DefaultTermVi
 
     override fun visitReal(term: Real): Term = visitNumber(term)
 
-    @Suppress("UNCHECKED_CAST")
     override fun visitAtom(term: Atom): Term {
-        val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
+        val labels: Labels = unifier.labellings[term] ?: emptySet()
         return term.setLabels(labels)
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun visitStruct(term: Struct): Term {
         val newArgs = term.args.map { it.accept(this) }
         return Struct.of(
             term.functor,
             newArgs
-        ).setLabels(unifier.labellings[term] ?: error("Missing labels for term $term"))
+        ).setLabels(unifier.labellings[term] ?: emptySet())
     }
-
-    @Suppress("UNCHECKED_CAST")
+    
     private fun visitNumber(term: Numeric): Term {
-        val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
+        val labels: Labels = unifier.labellings[term] ?: emptySet()
         return term.setLabels(labels)
     }
 }
