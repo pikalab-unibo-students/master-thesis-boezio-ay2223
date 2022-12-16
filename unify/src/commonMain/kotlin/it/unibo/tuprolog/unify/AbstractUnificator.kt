@@ -5,6 +5,9 @@ import it.unibo.tuprolog.core.Substitution.Companion.empty
 import it.unibo.tuprolog.core.Substitution.Companion.failed
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.Var
+import it.unibo.tuprolog.core.label.Labels
+import it.unibo.tuprolog.core.label.labels
+import it.unibo.tuprolog.utils.setTag
 import kotlin.jvm.JvmOverloads
 
 abstract class AbstractUnificator @JvmOverloads constructor(override val context: Substitution = empty()) : Unificator {
@@ -58,9 +61,13 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
         return changed
     }
 
-    private fun mgu(equations: MutableList<Equation>, occurCheckEnabled: Boolean): Substitution {
-        var changed = true
+    public open fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean = true
 
+    public open fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels = emptySet()
+
+    private fun mgu(equations: MutableList<Equation>, occurCheckEnabled: Boolean): Substitution {
+        val labelsMap: MutableMap<String, Labels> = mutableMapOf()
+        var changed = true
         while (changed) {
             changed = false
             val eqIterator = equations.listIterator()
@@ -76,15 +83,22 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
                         changed = true
                     }
                     eq.isAssignment -> {
-                        val assignment = eq.castToAssignment()
-                        if (occurCheckEnabled && occurrenceCheck(assignment.lhs, eq.rhs)) {
-                            return failed()
+                        if (shouldUnify(eq.lhs, eq.lhs.labels, eq.rhs, eq.rhs.labels)) {
+                            val newLabels = merge(eq.lhs, eq.lhs.labels, eq.rhs, eq.rhs.labels)
+                            labelsMap[eq.lhs.toString()] = newLabels
+                            labelsMap[eq.rhs.toString()] = newLabels
+                            val assignment = eq.castToAssignment()
+                            if (occurCheckEnabled && occurrenceCheck(assignment.lhs, eq.rhs)) {
+                                return failed()
+                            } else {
+                                changed = changed || applySubstitutionToEquations(
+                                    assignment.toSubstitution(),
+                                    equations,
+                                    eqIterator.previousIndex()
+                                )
+                            }
                         } else {
-                            changed = changed || applySubstitutionToEquations(
-                                assignment.toSubstitution(),
-                                equations,
-                                eqIterator.previousIndex()
-                            )
+                            return failed()
                         }
                     }
                     eq.isComparison -> {
@@ -102,7 +116,11 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
             }
         }
 
-        return equations.filter { it.isAssignment }.toSubstitution()
+        var substitution = equations.filter { it.isAssignment }.toSubstitution()
+        for ((key, value) in labelsMap) {
+            substitution = substitution.setTag(key, value)
+        }
+        return substitution
     }
 
     override fun mgu(term1: Term, term2: Term, occurCheckEnabled: Boolean): Substitution {
