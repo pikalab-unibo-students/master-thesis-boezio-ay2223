@@ -42,6 +42,11 @@ include(":ide")
 include(":examples")
 include(":full")
 
+include(":core-labels")
+include(":unify-labels")
+include(":solve-labels")
+
+
 gradleEnterprise {
     buildScan {
         termsOfServiceUrl = "https://gradle.com/terms-of-service"
