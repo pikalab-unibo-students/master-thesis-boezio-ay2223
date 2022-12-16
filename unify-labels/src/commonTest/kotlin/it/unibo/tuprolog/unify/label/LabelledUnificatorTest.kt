@@ -3,32 +3,19 @@ package it.unibo.tuprolog.unify.label
 import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Integer
 import it.unibo.tuprolog.core.Struct
-import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.Var
-import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.core.label.addLabel
-import it.unibo.tuprolog.unify.AbstractUnificator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AbstractLabelledUnificatorTest {
+class LabelledUnificatorTest {
 
-    // custom Unificator
-    val customAbstractUnificator = object : AbstractUnificator() {
-
-        override fun checkTermsEquality(first: Term, second: Term): Boolean {
-            TODO("Not yet implemented")
-        }
-
-        override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean {
-            return labels1.any { it in labels2 } || (labels1.isEmpty() && labels2.isEmpty())
-        }
-
-        override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels {
-            return (labels1.filter { it in labels2 }.toSet() + labels2.filter { it in labels1 }.toSet())
-        }
-    }
-    private val myUnificator = object : AbstractLabelledUnificator(customAbstractUnificator) {}
+    private val myUnificator = LabelledUnificator.strict(
+        shouldUnify = { _, l1, _, l2 ->
+            l1.any { it in l2 } || (l1.isEmpty() && l2.isEmpty()) },
+        merge = { _, l1, _, l2 ->
+            l1.filter { it in l2 }.toSet() + l2.filter { it in l1 }.toSet() }
+    )
 
     @Test
     fun testExampleWithoutLabels() {

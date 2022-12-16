@@ -4,47 +4,45 @@ import it.unibo.tuprolog.core.Substitution
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.core.label.labels
+import it.unibo.tuprolog.core.label.setLabellings
 import it.unibo.tuprolog.unify.AbstractUnificator
-import it.unibo.tuprolog.unify.Unificator
-import it.unibo.tuprolog.utils.setTag
+import it.unibo.tuprolog.unify.Equation
 
-abstract class AbstractLabelledUnificator(
-    private val delegate: AbstractUnificator = Unificator.default as AbstractUnificator
-) : LabelledAwareUnificator {
 
-    override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean =
-        delegate.shouldUnify(term1, labels1, term2, labels2)
+abstract class AbstractLabelledUnificator(context: Substitution = Substitution.empty())
+    : AbstractUnificator(context), LabelledUnificator {
 
-    override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels =
-        delegate.merge(term1, labels1, term2, labels2)
+    protected data class LabelledMguComputationContext(val labels: MutableMap<Term, Labels>) : MguComputationContext
 
-    override fun merge(
-        substitution1: Substitution,
-        substitution2: Substitution,
-        occurCheckEnabled: Boolean
-    ): Substitution {
-        TODO("Not yet implemented")
+    override fun createMguComputationContext(): MguComputationContext {
+        return LabelledMguComputationContext(mutableMapOf())
     }
 
-    override val context: Substitution
-        get() = delegate.context
-
-    override fun mgu(term1: Term, term2: Term, occurCheckEnabled: Boolean): Substitution {
-        if (shouldUnify(term1, term1.labels, term2, term2.labels)) {
-            val mgu = delegate.mgu(term1, term2, occurCheckEnabled)
-            if (mgu.isSuccess) {
-                val finalLabels = merge(term1, term1.labels, term2, term2.labels)
-                val newMgu = mgu.setTag(term1.toString(), finalLabels)
-                return newMgu.setTag(term2.toString(), finalLabels)
-            }
+    final override fun shortCircuit(computationContext: MguComputationContext, assignment: Equation.Assignment): Boolean {
+        val eq = assignment
+        if (shouldUnify(eq.lhs, eq.lhs.labels, eq.rhs, eq.rhs.labels)) {
+            val newLabels = merge(eq.lhs, eq.lhs.labels, eq.rhs, eq.rhs.labels)
+            val labelsMap = (computationContext as LabelledMguComputationContext).labels
+            labelsMap[eq.lhs] = newLabels
+            labelsMap[eq.rhs] = newLabels
+            return false
         }
-        return Substitution.failed()
+        return true
     }
+
+    final override fun hijacktMgu(computationContext: MguComputationContext, substitution: Substitution): Substitution {
+        val labelsMap = (computationContext as LabelledMguComputationContext).labels
+        return substitution.setLabellings(labelsMap)
+    }
+
+    override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean = true
+
+    override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels = emptySet()
 
     override fun unify(term1: Term, term2: Term, occurCheckEnabled: Boolean): Term? {
-        val mguWithLabels = mgu(term1, term2)
+        val mguWithLabels = mgu(term1, term2, occurCheckEnabled)
         if (mguWithLabels.isSuccess) {
-            return term1.accept(LabelledVisitor(mguWithLabels))
+            return term1.accept(LabelledVisitor(mguWithLabels.castToUnifier()))
         }
         return null
     }

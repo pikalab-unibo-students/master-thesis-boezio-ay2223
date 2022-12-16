@@ -58,13 +58,25 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
         return changed
     }
 
-    protected open fun shortCircuit(assignment: Equation.Assignment): Boolean = false
+    protected interface MguComputationContext
 
-    protected open fun hijacktMgu(substitution: Substitution): Substitution = substitution
+    protected open fun shortCircuit(
+        computationContext: MguComputationContext,
+        assignment: Equation.Assignment
+    ): Boolean = false
+
+    protected open fun hijacktMgu(
+        computationContext: MguComputationContext,
+        substitution: Substitution
+    ): Substitution = substitution
+
+    private val defaultMguComputationContext = object : MguComputationContext { }
+
+    protected open fun createMguComputationContext(): MguComputationContext = defaultMguComputationContext
 
     private fun mgu(equations: MutableList<Equation>, occurCheckEnabled: Boolean): Substitution {
         var changed = true
-
+        val ctx = createMguComputationContext()
         while (changed) {
             changed = false
             val eqIterator = equations.listIterator()
@@ -81,7 +93,7 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
                     }
                     eq.isAssignment -> {
                         val assignment = eq.castToAssignment()
-                        if (shortCircuit(assignment) || occurCheckEnabled && occurrenceCheck(assignment.lhs, eq.rhs)) {
+                        if (shortCircuit(ctx, assignment) || occurCheckEnabled && occurrenceCheck(assignment.lhs, eq.rhs)) {
                             return failed()
                         } else {
                             changed = changed || applySubstitutionToEquations(
@@ -106,7 +118,7 @@ abstract class AbstractUnificator @JvmOverloads constructor(override val context
             }
         }
 
-        return equations.filter { it.isAssignment }.toSubstitution().also { hijacktMgu(it) }
+        return hijacktMgu(ctx, equations.filter { it.isAssignment }.toSubstitution())
     }
 
     override fun mgu(term1: Term, term2: Term, occurCheckEnabled: Boolean): Substitution {

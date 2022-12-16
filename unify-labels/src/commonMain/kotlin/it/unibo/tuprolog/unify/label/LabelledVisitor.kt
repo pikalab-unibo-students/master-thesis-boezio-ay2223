@@ -9,22 +9,21 @@ import it.unibo.tuprolog.core.Substitution
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.Labels
+import it.unibo.tuprolog.core.label.labellings
 import it.unibo.tuprolog.core.label.setLabels
 import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
 
-class LabelledVisitor(substitution: Substitution) : DefaultTermVisitor<Term>() {
-
-    private val unifier: Substitution.Unifier = substitution.castToUnifier()
+class LabelledVisitor(private val unifier: Substitution.Unifier) : DefaultTermVisitor<Term>() {
 
     @Suppress("UNCHECKED_CAST")
     override fun defaultValue(term: Term): Term {
-        val labels: Labels = unifier.tags[term.toString()] as Labels
+        val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
         return unifier[term]?.setLabels(labels) ?: term.setLabels(labels)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun visitVar(term: Var): Term {
-        val labels: Labels = unifier.tags[term.completeName] as Labels
+        val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
         return unifier[term]?.setLabels(labels) ?: term.setLabels(labels)
     }
 
@@ -34,7 +33,7 @@ class LabelledVisitor(substitution: Substitution) : DefaultTermVisitor<Term>() {
 
     @Suppress("UNCHECKED_CAST")
     override fun visitAtom(term: Atom): Term {
-        val labels: Labels = unifier.tags[term.toString()] as Labels
+        val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
         return term.setLabels(labels)
     }
 
@@ -44,12 +43,12 @@ class LabelledVisitor(substitution: Substitution) : DefaultTermVisitor<Term>() {
         return Struct.of(
             term.functor,
             newArgs
-        ).setLabels(unifier.tags[term.toString()] as Labels)
+        ).setLabels(unifier.labellings[term] ?: error("Missing labels for term $term"))
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun visitNumber(term: Numeric): Term {
-        val labels: Labels = unifier.tags[term.toString()] as Labels
+        val labels: Labels = unifier.labellings[term] ?: error("Missing labels for term $term")
         return term.setLabels(labels)
     }
 }

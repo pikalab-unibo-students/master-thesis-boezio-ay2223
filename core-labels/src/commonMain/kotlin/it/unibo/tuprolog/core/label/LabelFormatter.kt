@@ -5,7 +5,7 @@ import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.visitors.DefaultTermVisitor
 
-class LabelFormatter() : DefaultTermVisitor<String>() {
+class LabelFormatter : DefaultTermVisitor<String>() {
 
     override fun defaultValue(term: Term) = getFormattedOutput(term)
 

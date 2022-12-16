@@ -2,4 +2,6 @@ package it.unibo.tuprolog.core.label
 
 import it.unibo.tuprolog.core.Term
 
-interface Labellings : Map<Term, Labels>
+typealias Labellings = Map<Term, Labels>
+
+fun emptyLabellings(): Labellings = emptyMap()

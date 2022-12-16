@@ -9,8 +9,3 @@ interface Label {
     }
 }
 
-internal data class LabelImpl(override val value: Any) : Label {
-    override fun toString(): String {
-        return "@$value"
-    }
-}
