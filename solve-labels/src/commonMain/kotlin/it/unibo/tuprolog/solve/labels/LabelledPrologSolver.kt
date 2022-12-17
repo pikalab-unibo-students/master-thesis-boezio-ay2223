@@ -7,7 +7,11 @@ import it.unibo.tuprolog.solve.channel.OutputStore
 import it.unibo.tuprolog.solve.classic.AbstractClassicSolver
 import it.unibo.tuprolog.solve.classic.ClassicExecutionContext
 import it.unibo.tuprolog.solve.classic.SolutionIterator
-import it.unibo.tuprolog.solve.classic.fsm.*
+import it.unibo.tuprolog.solve.classic.fsm.State
+import it.unibo.tuprolog.solve.classic.fsm.StateGoalSelection
+import it.unibo.tuprolog.solve.classic.fsm.StateBacktracking
+import it.unibo.tuprolog.solve.classic.fsm.StatePrimitiveExecution
+import it.unibo.tuprolog.solve.classic.fsm.StateRuleExecution
 import it.unibo.tuprolog.solve.exception.Warning
 import it.unibo.tuprolog.solve.flags.FlagStore
 import it.unibo.tuprolog.solve.library.Runtime
@@ -67,7 +71,7 @@ class LabelledPrologSolver : AbstractClassicSolver {
             else -> error("Illegal state: $this")
         }
 
-    private fun stillValid(context: ClassicExecutionContext): Boolean = true
+    private fun stillValid(context: ClassicExecutionContext) = true
 
     override fun copy(
         unificator: Unificator,

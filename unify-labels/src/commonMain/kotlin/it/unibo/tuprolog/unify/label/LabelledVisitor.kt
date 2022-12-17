@@ -41,7 +41,7 @@ class LabelledVisitor(private val unifier: Substitution.Unifier) : DefaultTermVi
             newArgs
         ).setLabels(unifier.labellings[term] ?: emptySet())
     }
-    
+
     private fun visitNumber(term: Numeric): Term {
         val labels: Labels = unifier.labellings[term] ?: emptySet()
         return term.setLabels(labels)
