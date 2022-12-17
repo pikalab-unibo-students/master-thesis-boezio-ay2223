@@ -12,9 +12,11 @@ class LabelledUnificatorTest {
 
     private val myUnificator = LabelledUnificator.strict(
         shouldUnify = { _, l1, _, l2 ->
-            l1.any { it in l2 } || (l1.isEmpty() && l2.isEmpty()) },
+            l1.any { it in l2 } || (l1.isEmpty() && l2.isEmpty())
+        },
         merge = { _, l1, _, l2 ->
-            l1.filter { it in l2 }.toSet() + l2.filter { it in l1 }.toSet() }
+            l1.filter { it in l2 }.toSet() + l2.filter { it in l1 }.toSet()
+        }
     )
 
     @Test
