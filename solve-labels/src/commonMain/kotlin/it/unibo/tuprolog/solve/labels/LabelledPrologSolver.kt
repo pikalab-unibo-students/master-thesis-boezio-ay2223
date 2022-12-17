@@ -8,8 +8,8 @@ import it.unibo.tuprolog.solve.classic.AbstractClassicSolver
 import it.unibo.tuprolog.solve.classic.ClassicExecutionContext
 import it.unibo.tuprolog.solve.classic.SolutionIterator
 import it.unibo.tuprolog.solve.classic.fsm.State
-import it.unibo.tuprolog.solve.classic.fsm.StateGoalSelection
 import it.unibo.tuprolog.solve.classic.fsm.StateBacktracking
+import it.unibo.tuprolog.solve.classic.fsm.StateGoalSelection
 import it.unibo.tuprolog.solve.classic.fsm.StatePrimitiveExecution
 import it.unibo.tuprolog.solve.classic.fsm.StateRuleExecution
 import it.unibo.tuprolog.solve.exception.Warning
