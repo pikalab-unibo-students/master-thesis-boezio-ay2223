@@ -8,4 +8,3 @@ interface Label {
         fun of(value: Any): Label = LabelImpl(value)
     }
 }
-

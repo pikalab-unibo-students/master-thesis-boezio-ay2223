@@ -32,7 +32,6 @@ fun <T : Term> T.addLabel(label: Any): T = addLabel(Label.of(label))
 fun Term.equalsWithLabels(other: Any?) =
     this == other && this.labels == (other as Term).labels
 
-
 @Suppress("UNCHECKED_CAST")
 val Substitution.labellings: Labellings
     get() = this.tags[LABELLINGS] as Labellings? ?: emptyLabellings()
