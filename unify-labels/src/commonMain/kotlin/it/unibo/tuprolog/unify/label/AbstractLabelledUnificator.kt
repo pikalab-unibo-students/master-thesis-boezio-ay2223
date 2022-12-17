@@ -8,9 +8,7 @@ import it.unibo.tuprolog.core.label.setLabellings
 import it.unibo.tuprolog.unify.AbstractUnificator
 import it.unibo.tuprolog.unify.Equation
 
-
-abstract class AbstractLabelledUnificator(context: Substitution = Substitution.empty())
-    : AbstractUnificator(context), LabelledUnificator {
+abstract class AbstractLabelledUnificator(context: Substitution = Substitution.empty()) : AbstractUnificator(context), LabelledUnificator {
 
     protected data class LabelledMguComputationContext(val labels: MutableMap<Term, Labels>) : MguComputationContext
 
