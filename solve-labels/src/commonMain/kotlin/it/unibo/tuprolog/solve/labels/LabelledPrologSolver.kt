@@ -79,14 +79,15 @@ class LabelledPrologSolver : AbstractClassicSolver {
     private fun stillValid(context: ClassicExecutionContext): Boolean {
         val unificator = context.unificator
         val labellings = unificator.context.labellings
-        val structuresMap = labellings.filter { (key,_) -> key is Struct && key !is Atom }
-        for((key,value) in structuresMap){
+        val structuresMap = labellings.filter { (key, _) -> key is Struct && key !is Atom }
+        for ((key, value) in structuresMap) {
             // in this particular example labels of the struct must be equals to one of its arguments' ones
             val struct = key.castToStruct()
             val argsLabels = struct.args.map { it.labels }
             val compatible = argsLabels.contains(value)
-            if(!compatible)
+            if (!compatible) {
                 return false
+            }
         }
         return true
     }
