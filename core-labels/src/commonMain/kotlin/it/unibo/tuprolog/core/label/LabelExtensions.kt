@@ -38,3 +38,6 @@ val Substitution.labellings: Labellings
 
 fun <S : Substitution> S.setLabellings(labellings: Labellings): S =
     this.setTag(LABELLINGS, labellings)
+
+fun <S : Substitution> S.addLabellings(otherLabellings: Labellings): S =
+    this.setTag(LABELLINGS, labellings + otherLabellings)
