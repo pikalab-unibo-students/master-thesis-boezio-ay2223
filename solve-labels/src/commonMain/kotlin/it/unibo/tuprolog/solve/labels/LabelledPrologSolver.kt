@@ -1,5 +1,9 @@
 package it.unibo.tuprolog.solve.labels
 
+import it.unibo.tuprolog.core.Atom
+import it.unibo.tuprolog.core.Struct
+import it.unibo.tuprolog.core.label.labellings
+import it.unibo.tuprolog.core.label.labels
 import it.unibo.tuprolog.solve.channel.InputChannel
 import it.unibo.tuprolog.solve.channel.InputStore
 import it.unibo.tuprolog.solve.channel.OutputChannel
@@ -55,6 +59,7 @@ class LabelledPrologSolver : AbstractClassicSolver {
         onStateTransition: (State, State, Long) -> Unit
     ): SolutionIterator = SolutionIterator.of(initialState, onStateTransition, this::hijackStateTransition)
 
+    @Suppress("UNUSED_PARAMETER")
     private fun hijackStateTransition(source: State, destination: State, step: Long): State {
         if (destination is StateGoalSelection && source.let { it is StateRuleExecution || it is StatePrimitiveExecution }) {
             if (!stillValid(destination.context)) {
@@ -71,7 +76,20 @@ class LabelledPrologSolver : AbstractClassicSolver {
             else -> error("Illegal state: $this")
         }
 
-    private fun stillValid(context: ClassicExecutionContext) = true
+    private fun stillValid(context: ClassicExecutionContext): Boolean {
+        val unificator = context.unificator
+        val labellings = unificator.context.labellings
+        val structuresMap = labellings.filter { (key,_) -> key is Struct && key !is Atom }
+        for((key,value) in structuresMap){
+            // in this particular example labels of the struct must be equals to one of its arguments' ones
+            val struct = key.castToStruct()
+            val argsLabels = struct.args.map { it.labels }
+            val compatible = argsLabels.contains(value)
+            if(!compatible)
+                return false
+        }
+        return true
+    }
 
     override fun copy(
         unificator: Unificator,
