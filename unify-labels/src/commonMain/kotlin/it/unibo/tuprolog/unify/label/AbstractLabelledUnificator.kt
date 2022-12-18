@@ -43,7 +43,7 @@ abstract class AbstractLabelledUnificator(context: Substitution = Substitution.e
             val mgu = super<AbstractUnificator>.mgu(term1, term2, occurCheckEnabled)
             if (mgu.isSuccess) {
                 val finalLabels = merge(term1, term1.labels, term2, term2.labels)
-                val termsMap = mutableMapOf<Term,Labels>()
+                val termsMap = mutableMapOf<Term, Labels>()
                 termsMap[term1] = finalLabels
                 termsMap[term2] = finalLabels
                 return mgu.addLabellings(termsMap)
