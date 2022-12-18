@@ -34,7 +34,7 @@ class LabelledPrologSolverTest {
     )
 
     @Test
-    fun testBaseExampleYesSolution(){
+    fun testBaseExampleYesSolution() {
         // f(A<@2>,B<@5>)<@5,@6>
         val goal = Struct.of(
             "f",
@@ -52,7 +52,7 @@ class LabelledPrologSolverTest {
     }
 
     @Test @Ignore
-    fun testBaseExampleNoSolution(){
+    fun testBaseExampleNoSolution() {
         // f(A<@2>,B<@6>)<@5,@6>
         val goal = Struct.of(
             "f",
