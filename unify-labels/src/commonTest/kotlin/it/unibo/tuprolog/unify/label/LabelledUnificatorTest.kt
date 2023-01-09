@@ -6,6 +6,7 @@ import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.Label
 import it.unibo.tuprolog.core.label.addLabel
+import it.unibo.tuprolog.core.label.labellings
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -130,6 +131,6 @@ class LabelledUnificatorTest {
         val finalLabels = setOf(Label.of("a"))
         val finalMap = mapOf(x to finalLabels, y to finalLabels, z to finalLabels)
 
-        assertEquals(finalSubstitution.tags["it.unibo.tuprolog.labellings"], finalMap)
+        assertEquals(finalSubstitution.labellings, finalMap)
     }
 }
