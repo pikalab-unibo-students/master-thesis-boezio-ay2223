@@ -4,6 +4,7 @@ import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Integer
 import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Var
+import it.unibo.tuprolog.core.label.Label
 import it.unibo.tuprolog.core.label.addLabel
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -113,5 +114,22 @@ class LabelledUnificatorTest {
         ).addLabel("y")
 
         assertEquals(expected, unified)
+    }
+
+    @Test
+    fun testMergeWithoutOverriding(){
+
+        val x = Var.of("X").addLabel("a").addLabel("b").addLabel("c")
+        val y = Var.of("Y").addLabel("a").addLabel("b")
+        val z = Atom.of("z").addLabel("a")
+
+        val substitution1 = myUnificator.mgu(x,y)
+        val substitution2 = myUnificator.mgu(y,z)
+        val finalSubstitution = myUnificator.merge(substitution1, substitution2)
+
+        val finalLabels = setOf(Label.of("a"))
+        val finalMap = mapOf(x to finalLabels, y to finalLabels, z to finalLabels)
+
+        assertEquals(finalSubstitution.tags["it.unibo.tuprolog.labellings"], finalMap)
     }
 }
