@@ -1,7 +1,9 @@
 package it.unibo.tuprolog.unify.label
 
+import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Substitution
 import it.unibo.tuprolog.core.Term
+import it.unibo.tuprolog.core.label.Labellings
 import it.unibo.tuprolog.core.label.Labels
 import it.unibo.tuprolog.core.label.addLabellings
 import it.unibo.tuprolog.core.label.labels
@@ -37,6 +39,8 @@ abstract class AbstractLabelledUnificator(context: Substitution = Substitution.e
     override fun shouldUnify(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Boolean = true
 
     override fun merge(term1: Term, labels1: Labels, term2: Term, labels2: Labels): Labels = emptySet()
+
+    override fun stillValid(struct: Struct, labellings: Labellings) = true
 
     override fun mgu(term1: Term, term2: Term, occurCheckEnabled: Boolean): Substitution {
         if (shouldUnify(term1, term1.labels, term2, term2.labels)) {

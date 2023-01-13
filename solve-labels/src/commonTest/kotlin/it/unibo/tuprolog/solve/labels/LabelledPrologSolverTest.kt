@@ -7,7 +7,6 @@ import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.addLabel
 import it.unibo.tuprolog.theory.Theory
 import it.unibo.tuprolog.unify.label.LabelledUnificator
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -30,6 +29,10 @@ class LabelledPrologSolverTest {
         },
         merge = { _, l1, _, l2 ->
             l1.filter { it in l2 }.toSet() + l2.filter { it in l1 }.toSet()
+        },
+        stillValid = { struct, labellings ->
+            val argsLabels = struct.args.map { labellings[it] }
+            argsLabels.any { it == labellings[struct] }
         }
     )
 
@@ -51,7 +54,7 @@ class LabelledPrologSolverTest {
         assertTrue(solution.isYes)
     }
 
-    @Test @Ignore
+    @Test
     fun testBaseExampleNoSolution() {
         // f(A<@2>,B<@6>)<@5,@6>
         val goal = Struct.of(

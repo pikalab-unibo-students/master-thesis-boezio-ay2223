@@ -18,7 +18,8 @@ class LabelledUnificatorTest {
         },
         merge = { _, l1, _, l2 ->
             l1.filter { it in l2 }.toSet() + l2.filter { it in l1 }.toSet()
-        }
+        },
+        stillValid = { _, _ -> true}
     )
 
     @Test

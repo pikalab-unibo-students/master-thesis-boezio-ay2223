@@ -2,7 +2,6 @@ package it.unibo.tuprolog.solve.labels
 
 import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Struct
-import it.unibo.tuprolog.core.label.Labellings
 import it.unibo.tuprolog.core.label.labellings
 import it.unibo.tuprolog.solve.channel.InputChannel
 import it.unibo.tuprolog.solve.channel.InputStore
@@ -76,27 +75,18 @@ class LabelledPrologSolver : AbstractClassicSolver {
             else -> error("Illegal state: $this")
         }
 
-    // this function should become a callback method
-    private fun stillValid(struct: Struct, labellings: Labellings): Boolean{
-        val argsLabels = struct.args.map { labellings[it] }
-        return argsLabels.any { it == labellings[struct] }
-    }
-
     private fun checkValidity(context: ClassicExecutionContext): Boolean {
         val labellings = context.substitution.labellings
         val structuresMap = labellings.filter { (key, _) -> key is Struct && key !is Atom }
         for ((key, _) in structuresMap) {
-            // in this particular example labels of the struct must be equals to one of its arguments' ones
             val struct = key.castToStruct()
             val currentArgs = struct.args.map { it.apply(context.substitution) }
+            // check makes sense only if arguments are grounded
             if (currentArgs.all { it.isGround }){
-                if(!stillValid(key.castToStruct(), labellings)){
+                val unificator = context.unificator as LabelledUnificator
+                if(!unificator.stillValid(key.castToStruct(), labellings)){
                     return false
                 }
-                /*val argsLabels = currentArgs.map { labellings[it] }
-                if(!argsLabels.any { it == value }) {
-                    return false
-                }*/
             } else {
                 continue
             }
