@@ -2,8 +2,8 @@ package it.unibo.tuprolog.solve.labels
 
 import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Struct
+import it.unibo.tuprolog.core.label.Labellings
 import it.unibo.tuprolog.core.label.labellings
-import it.unibo.tuprolog.core.label.labels
 import it.unibo.tuprolog.solve.channel.InputChannel
 import it.unibo.tuprolog.solve.channel.InputStore
 import it.unibo.tuprolog.solve.channel.OutputChannel
@@ -62,7 +62,7 @@ class LabelledPrologSolver : AbstractClassicSolver {
     @Suppress("UNUSED_PARAMETER")
     private fun hijackStateTransition(source: State, destination: State, step: Long): State {
         if (destination is StateGoalSelection && source.let { it is StateRuleExecution || it is StatePrimitiveExecution }) {
-            if (!stillValid(destination.context)) {
+            if (!checkValidity(destination.context)) {
                 return source.failureState
             }
         }
@@ -76,16 +76,29 @@ class LabelledPrologSolver : AbstractClassicSolver {
             else -> error("Illegal state: $this")
         }
 
-    private fun stillValid(context: ClassicExecutionContext): Boolean {
+    // this function should become a callback method
+    private fun stillValid(struct: Struct, labellings: Labellings): Boolean{
+        val argsLabels = struct.args.map { labellings[it] }
+        return argsLabels.any { it == labellings[struct] }
+    }
+
+    private fun checkValidity(context: ClassicExecutionContext): Boolean {
         val labellings = context.substitution.labellings
         val structuresMap = labellings.filter { (key, _) -> key is Struct && key !is Atom }
-        for ((key, value) in structuresMap) {
+        for ((key, _) in structuresMap) {
             // in this particular example labels of the struct must be equals to one of its arguments' ones
             val struct = key.castToStruct()
-            val argsLabels = struct.args.map { it.labels }
-            val compatible = argsLabels.contains(value)
-            if (!compatible) {
-                return false
+            val currentArgs = struct.args.map { it.apply(context.substitution) }
+            if (currentArgs.all { it.isGround }){
+                if(!stillValid(key.castToStruct(), labellings)){
+                    return false
+                }
+                /*val argsLabels = currentArgs.map { labellings[it] }
+                if(!argsLabels.any { it == value }) {
+                    return false
+                }*/
+            } else {
+                continue
             }
         }
         return true
