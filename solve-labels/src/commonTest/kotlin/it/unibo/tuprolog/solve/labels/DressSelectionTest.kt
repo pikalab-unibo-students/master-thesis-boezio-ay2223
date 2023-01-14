@@ -66,15 +66,15 @@ class DressSelectionTest {
         // custom unificator for this problem
         val unificator = LabelledUnificator.strict(
             shouldUnify = { term1, l1, term2, l2 ->
-                if(term1 is Struct && term2 is Struct && term1.functor == "dress" && term2.functor == "dress"){
-                    if(l2 == emptySet<Label>()){
+                if (term1 is Struct && term2 is Struct && term1.functor == "dress" && term2.functor == "dress"){
+                    if (l2 == emptySet<Label>()) {
                         true
                     } else {
                         l1.any { it == l2 }// slight variation
                     }
-                } else if(term1 is Var && l2 == emptySet<Label>()){
+                } else if (term1 is Var && l2 == emptySet<Label>()) {
                     true
-                } else if(term2 is Var && term1 is Struct && l2.size == 2) {
+                } else if (term2 is Var && term1 is Struct && l2.size == 2) {
                     val termParser = TermParser.withDefaultOperators()
                     val rgbReference = termParser.parseStruct(l2.elementAt(0).toString())
                     val threshold = termParser.parseInteger(l2.elementAt(1).toString())
@@ -86,14 +86,14 @@ class DressSelectionTest {
             },
             merge = { term1, _, term2, l2 ->
                 if(term1 is Struct && term2 is Struct && term1.functor == "dress" && term2.functor == "dress"){
-                    if(l2 == emptySet<Label>()){
+                    if(l2 == emptySet<Label>()) {
                         emptySet()
                     } else {
                         l2
                     }
-                } else if(term1 is Var && l2 == emptySet<Label>()){
+                } else if (term1 is Var && l2 == emptySet<Label>()) {
                     emptySet()
-                } else if(term1 is Var && term2 is Struct && l2.size == 2) {
+                } else if (term1 is Var && term2 is Struct && l2.size == 2) {
                     l2
                 } else {
                     emptySet()

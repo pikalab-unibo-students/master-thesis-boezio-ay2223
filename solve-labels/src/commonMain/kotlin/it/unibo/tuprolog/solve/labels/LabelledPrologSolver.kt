@@ -82,9 +82,9 @@ class LabelledPrologSolver : AbstractClassicSolver {
             val struct = key.castToStruct()
             val currentArgs = struct.args.map { it.apply(context.substitution) }
             // check makes sense only if arguments are grounded
-            if (currentArgs.all { it.isGround }){
+            if (currentArgs.all { it.isGround }) {
                 val unificator = context.unificator as LabelledUnificator
-                if(!unificator.stillValid(key.castToStruct(), labellings)){
+                if (!unificator.stillValid(key.castToStruct(), labellings)) {
                     return false
                 }
             } else {
