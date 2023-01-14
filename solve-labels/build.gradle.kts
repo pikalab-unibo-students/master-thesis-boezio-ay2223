@@ -12,6 +12,7 @@ kotlin {
                 api(project(":core"))
                 api(project(":unify-labels"))
                 api(project(":solve-classic"))
+                api(project(":parser-core"))
             }
         }
     }
