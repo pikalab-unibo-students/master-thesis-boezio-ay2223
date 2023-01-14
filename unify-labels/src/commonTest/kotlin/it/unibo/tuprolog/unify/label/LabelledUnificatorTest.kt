@@ -19,7 +19,7 @@ class LabelledUnificatorTest {
         merge = { _, l1, _, l2 ->
             l1.filter { it in l2 }.toSet() + l2.filter { it in l1 }.toSet()
         },
-        stillValid = { _, _ -> true}
+        stillValid = { _, _ -> true }
     )
 
     @Test
@@ -119,14 +119,13 @@ class LabelledUnificatorTest {
     }
 
     @Test
-    fun testMergeWithoutOverriding(){
-
+    fun testMergeWithoutOverriding() {
         val x = Var.of("X").addLabel("a").addLabel("b").addLabel("c")
         val y = Var.of("Y").addLabel("a").addLabel("b")
         val z = Atom.of("z").addLabel("a")
 
-        val substitution1 = myUnificator.mgu(x,y)
-        val substitution2 = myUnificator.mgu(y,z)
+        val substitution1 = myUnificator.mgu(x, y)
+        val substitution2 = myUnificator.mgu(y, z)
         val finalSubstitution = myUnificator.merge(substitution1, substitution2)
 
         val finalLabels = setOf(Label.of("a"))
