@@ -97,7 +97,7 @@ class DressSelectionTest {
                     if (l2 == emptySet<Label>()) {
                         true
                     } else {
-                        l1.any { it == l2 } // slight variation
+                        l2.all { it in l1 }
                     }
                 } else if (term1 is Var && l2 == emptySet<Label>()) {
                     true
