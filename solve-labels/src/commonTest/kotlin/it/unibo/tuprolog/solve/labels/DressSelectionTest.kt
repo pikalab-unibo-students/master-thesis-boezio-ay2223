@@ -37,7 +37,9 @@ class DressSelectionTest {
                     Atom.of("sweater"),
                     Struct.of(
                         "rgb",
-                        Integer.of(255), Integer.of(240), Integer.of(245)
+                        Integer.of(255),
+                        Integer.of(240),
+                        Integer.of(245)
                     )
                 ).addLabel("winter").addLabel("fall")
             ),
@@ -48,7 +50,9 @@ class DressSelectionTest {
                     Atom.of("t-shirt"),
                     Struct.of(
                         "rgb",
-                        Integer.of(255), Integer.of(222), Integer.of(173)
+                        Integer.of(255),
+                        Integer.of(222),
+                        Integer.of(173)
                     )
                 ).addLabel("summer").addLabel("spring")
             ),
@@ -59,18 +63,22 @@ class DressSelectionTest {
                     Atom.of("t-shirt"),
                     Struct.of(
                         "rgb",
-                        Integer.of(119), Integer.of(136), Integer.of(153)
+                        Integer.of(119),
+                        Integer.of(136),
+                        Integer.of(153)
                     )
                 ).addLabel("summer").addLabel("spring")
             ),
-            //dress (jeans , rgb (188 , 143 , 143) ) <@winter ,@fall , @summer , @spring >.
+            // dress (jeans , rgb (188 , 143 , 143) ) <@winter ,@fall , @summer , @spring >.
             Fact.of(
                 Struct.of(
                     "dress",
                     Atom.of("jeans"),
                     Struct.of(
                         "rgb",
-                        Integer.of(188), Integer.of(143), Integer.of(143)
+                        Integer.of(188),
+                        Integer.of(143),
+                        Integer.of(143)
                     )
                 ).addLabel("winter").addLabel("fall").addLabel("summer").addLabel("spring")
             ),
