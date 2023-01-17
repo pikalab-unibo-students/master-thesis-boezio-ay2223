@@ -3,10 +3,12 @@ package it.unibo.tuprolog.solve.labels
 import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Fact
 import it.unibo.tuprolog.core.Integer
+import it.unibo.tuprolog.core.Rule
 import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.Label
 import it.unibo.tuprolog.core.label.addLabel
+import it.unibo.tuprolog.core.label.labels
 import it.unibo.tuprolog.core.parsing.TermParser
 import it.unibo.tuprolog.theory.Theory
 import it.unibo.tuprolog.unify.label.LabelledUnificator
@@ -92,12 +94,15 @@ class DressSelectionTest {
 
         // custom unificator for this problem
         val unificator = LabelledUnificator.strict(
-            shouldUnify = { term1, l1, term2, l2 ->
-                if (term1 is Struct && term2 is Struct && term1.functor == "dress" && term2.functor == "dress") {
-                    if (l2 == emptySet<Label>()) {
+            shouldUnify = { term1, _, term2, l2 ->
+                if (term1 is Fact && term2 is Rule && term1.head.let{ it.functor == "dress" && it.arity == 2 }
+                    && term2.head.let { it.functor == "dress" && it.arity == 2 }) {
+                    val factLabels = term1.head.labels
+                    val ruleLabels = term2.head.labels
+                    if (ruleLabels == emptySet<Label>()) {
                         true
                     } else {
-                        l2.all { it in l1 }
+                        ruleLabels.all { it in factLabels }
                     }
                 } else if (term1 is Var && l2 == emptySet<Label>()) {
                     true
