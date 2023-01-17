@@ -8,7 +8,6 @@ import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.Label
 import it.unibo.tuprolog.core.label.addLabel
 import it.unibo.tuprolog.core.label.labels
-import it.unibo.tuprolog.core.parsing.TermParser
 import it.unibo.tuprolog.theory.Theory
 import it.unibo.tuprolog.unify.label.LabelledUnificator
 import kotlin.math.pow
@@ -18,13 +17,12 @@ import kotlin.test.assertTrue
 
 class DressSelectionTest {
 
-    private fun checkSimilarity(referenceColor: Struct, dressColor: Struct, threshold: Integer): Boolean {
+    private fun checkSimilarity(referenceColor: Struct, dressColor: Struct, threshold: Int): Boolean {
         val argsReference = referenceColor.args.map { it.castToInteger().value.toDouble() }
         val argsDress = dressColor.args.map { it.castToInteger().value.toDouble() }
-        val intThreshold = threshold.value.toDouble()
         val componentDistances = argsReference.zip(argsDress).map { (lhs, rhs) -> (lhs - rhs).pow(2) }
         val euclideanDistance = sqrt(componentDistances.sum())
-        return euclideanDistance <= intThreshold
+        return euclideanDistance <= threshold
     }
 
     @Test
@@ -88,7 +86,12 @@ class DressSelectionTest {
         val goal = Struct.of(
             "dress",
             Var.of("Name"),
-            Var.of("Color").addLabel("rgb(255,239,213)").addLabel("30")
+            Var.of("Color").addLabel(Struct.of(
+                "rgb",
+                Integer.of(255),
+                Integer.of(239),
+                Integer.of(213)
+            )).addLabel(35)
         ).addLabel("winter")
 
         // custom unificator for this problem
@@ -101,12 +104,16 @@ class DressSelectionTest {
                     } else {
                         l1.all { it in l2 }
                     }
-                } else if (term1.labels.size == 2 && term2 is Struct) {
-                    val termParser = TermParser.withDefaultOperators()
-                    val rgbReference = termParser.parseStruct(l2.elementAt(0).toString())
-                    val threshold = termParser.parseInteger(l2.elementAt(1).toString())
-                    val isSimilar = checkSimilarity(rgbReference, term2, threshold)
-                    isSimilar
+                } else if (term1.labels.size == 2
+                    && term2.let { it is Struct && it.functor == "rgb" && it.arity == 3}) {
+                    val labels = term1.labels
+                    val rgbReference = labels.elementAt(0).value
+                    val threshold = labels.elementAt(1).value
+                    return@strict checkSimilarity(
+                        rgbReference as Struct,
+                        term2.castToStruct(),
+                        threshold as Int
+                    )
                 } else {
                     true
                 }
