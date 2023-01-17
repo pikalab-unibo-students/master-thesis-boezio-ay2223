@@ -26,12 +26,15 @@ interface SolutionIterator : Iterator<Solution> {
         @JvmStatic
         fun of(
             initialState: State,
+            onStateTransition: (State, State, Long) -> Unit = { _, _, _ -> }
+        ): SolutionIterator = SimpleSolutionIterator(initialState, onStateTransition)
+
+        @JsName("hijackable")
+        @JvmStatic
+        fun hijackable(
+            initialState: State,
             onStateTransition: (State, State, Long) -> Unit = { _, _, _ -> },
-            hijack: ((State, State, Long) -> State)? = null
-        ): SolutionIterator = if (hijack == null) {
-            SimpleSolutionIterator(initialState, onStateTransition)
-        } else {
-            HijackableSolutionIterator(initialState, hijack, onStateTransition)
-        }
+            hijack: ((State, State, Long) -> State) = { _, s, _ -> s }
+        ): SolutionIterator = HijackableSolutionIterator(initialState, hijack, onStateTransition)
     }
 }

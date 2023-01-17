@@ -56,7 +56,7 @@ class LabelledPrologSolver : AbstractClassicSolver {
     override fun solutionIterator(
         initialState: State,
         onStateTransition: (State, State, Long) -> Unit
-    ): SolutionIterator = SolutionIterator.of(initialState, onStateTransition, this::hijackStateTransition)
+    ): SolutionIterator = SolutionIterator.hijackable(initialState, onStateTransition, this::hijackStateTransition)
 
     @Suppress("UNUSED_PARAMETER")
     private fun hijackStateTransition(source: State, destination: State, step: Long): State {
