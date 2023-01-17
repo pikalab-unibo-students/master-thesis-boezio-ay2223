@@ -3,7 +3,6 @@ package it.unibo.tuprolog.solve.labels
 import it.unibo.tuprolog.core.Atom
 import it.unibo.tuprolog.core.Fact
 import it.unibo.tuprolog.core.Integer
-import it.unibo.tuprolog.core.Rule
 import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.label.Label
@@ -94,39 +93,34 @@ class DressSelectionTest {
 
         // custom unificator for this problem
         val unificator = LabelledUnificator.strict(
-            shouldUnify = { term1, _, term2, l2 ->
-                if (term1 is Fact && term2 is Rule && term1.head.let{ it.functor == "dress" && it.arity == 2 }
-                    && term2.head.let { it.functor == "dress" && it.arity == 2 }) {
-                    val factLabels = term1.head.labels
-                    val ruleLabels = term2.head.labels
-                    if (ruleLabels == emptySet<Label>()) {
+            shouldUnify = { term1, l1, term2, l2 ->
+                if (term1.let { it is Struct && it.functor == "dress" && it.arity == 2 }
+                    && term2.let { it is Struct && it.functor == "dress" && it.arity == 2 }) {
+                    if (l1 == emptySet<Label>()) {
                         true
                     } else {
-                        ruleLabels.all { it in factLabels }
+                        l1.all { it in l2 }
                     }
-                } else if (term1 is Var && l2 == emptySet<Label>()) {
-                    true
-                } else if (term2 is Var && term1 is Struct && l2.size == 2) {
+                } else if (term1.labels.size == 2 && term2 is Struct) {
                     val termParser = TermParser.withDefaultOperators()
                     val rgbReference = termParser.parseStruct(l2.elementAt(0).toString())
                     val threshold = termParser.parseInteger(l2.elementAt(1).toString())
-                    val isSimilar = checkSimilarity(rgbReference, term1, threshold)
+                    val isSimilar = checkSimilarity(rgbReference, term2, threshold)
                     isSimilar
                 } else {
-                    false
+                    true
                 }
             },
-            merge = { term1, _, term2, l2 ->
-                if (term1 is Struct && term2 is Struct && term1.functor == "dress" && term2.functor == "dress") {
-                    if (l2 == emptySet<Label>()) {
+            merge = { term1, l1, term2, _ ->
+                if (term1.let { it is Struct && it.functor == "dress" && it.arity == 2 }
+                    && term2.let { it is Struct && it.functor == "dress" && it.arity == 2 }) {
+                    if (l1 == emptySet<Label>()) {
                         emptySet()
                     } else {
-                        l2
+                        l1
                     }
-                } else if (term1 is Var && l2 == emptySet<Label>()) {
-                    emptySet()
-                } else if (term1 is Var && term2 is Struct && l2.size == 2) {
-                    l2
+                } else if (term1.labels.size == 2 && term2 is Struct) {
+                    l1
                 } else {
                     emptySet()
                 }
