@@ -66,12 +66,14 @@ class DressSelectionTest {
     private val goal = Struct.of(
         "dress",
         Var.of("Name"),
-        Var.of("Color").addLabel(Struct.of(
-            "rgb",
-            Integer.of(255),
-            Integer.of(239),
-            Integer.of(213)
-        )).addLabel(35)
+        Var.of("Color").addLabel(
+            Struct.of(
+                "rgb",
+                Integer.of(255),
+                Integer.of(239),
+                Integer.of(213)
+            )
+        ).addLabel(35)
     ).addLabel("winter").addLabel("fall")
 
     private fun checkSimilarity(referenceColor: Struct, dressColor: Struct, threshold: Int): Boolean {
