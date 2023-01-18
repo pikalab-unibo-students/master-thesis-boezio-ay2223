@@ -21,15 +21,17 @@ class DressSelectionTest {
     // custom unificator for this problem
     private val unificator = LabelledUnificator.strict(
         shouldUnify = { term1, l1, term2, l2 ->
-            if (term1.let { it is Struct && it.functor == "dress" && it.arity == 2 }
-                && term2.let { it is Struct && it.functor == "dress" && it.arity == 2 }) {
+            if (term1.let { it is Struct && it.functor == "dress" && it.arity == 2 } &&
+                term2.let { it is Struct && it.functor == "dress" && it.arity == 2 }
+            ) {
                 if (l1 == emptySet<Label>()) {
                     true
                 } else {
                     l1.all { it in l2 }
                 }
-            } else if (term1.labels.size == 2
-                && term2.let { it is Struct && it.functor == "rgb" && it.arity == 3}) {
+            } else if (term1.labels.size == 2 &&
+                term2.let { it is Struct && it.functor == "rgb" && it.arity == 3 }
+            ) {
                 val labels = term1.labels
                 val rgbReference = labels.elementAt(0).value
                 val threshold = labels.elementAt(1).value
@@ -43,8 +45,9 @@ class DressSelectionTest {
             }
         },
         merge = { term1, l1, term2, _ ->
-            if (term1.let { it is Struct && it.functor == "dress" && it.arity == 2 }
-                && term2.let { it is Struct && it.functor == "dress" && it.arity == 2 }) {
+            if (term1.let { it is Struct && it.functor == "dress" && it.arity == 2 } &&
+                term2.let { it is Struct && it.functor == "dress" && it.arity == 2 }
+            ) {
                 if (l1 == emptySet<Label>()) {
                     emptySet()
                 } else {
