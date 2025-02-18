@@ -1,5 +1,5 @@
 plugins {
-    id("com.gradle.enterprise") version "3.18.1"
+    id("com.gradle.enterprise") version "3.19.2"
 }
 
 rootProject.name = "2p"
